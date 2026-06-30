@@ -1,0 +1,22 @@
+2.1 Why are the variables declared as private?
+    Variables are set to private mainly to protect data and stop other classes 
+from arbitrarily modifying student information. If external code could freely 
+alter student IDs or CGPA values, data would easily become messy. Since private 
+variables can only be accessed within their own class, validation rules can be 
+added to block invalid data. No adjustments to code everywhere are required when 
+making updates later, making maintenance much easier.
+
+2.2 What happens if the variables are declared public?
+    Once a variable is public, any piece of code in the whole project can read, 
+overwrite or tamper with it without any restrictions. For example, negative CGPA 
+values or invalid student IDs could be entered, leaving data inconsistent and broken. 
+Any small change to the variable will force edits to every section of code that uses it, 
+which makes fixing and updating code really troublesome.
+
+2.3 Why do we use getter and setter?
+    After variables are marked private, outside code cannot read or edit them directly. 
+Getters safely retrieve stored data, while setters standardize how data gets updated. 
+Restrictions can be added inside setters to block invalid values from being saved. If 
+logic for reading or updating data needs adjustment later, only these two types of 
+methods require editing instead of rewriting huge chunks of external code. Most common 
+Java tools and frameworks also rely on this standard coding style.
