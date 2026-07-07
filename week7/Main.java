@@ -30,6 +30,6 @@ public class Main {
         microwave.displayBrand();
         microwave.turnOn();
         microwave.operate();
-        microw
+        microwave.turnOff();
     }
 }
