@@ -60,19 +60,19 @@ public class QuizBattleGUI {
      * 游戏主循环
      */
     private void startGame() {
-        System.out.println("==== Code Boss 答题对战开始 ====");
+        System.out.println("==== Code Boss Quiz Battle Begins ====");
         while (currentQIndex < questionList.size()) {
             // 打印状态
-            System.out.println("\nBoss HP: " + bossHP + " | 玩家HP: " + playerHP + " | 分数: " + score);
-            Questions q = questionList.get(currentQIndex);
+            System.out.println("\nBoss HP: " + bossHP + " | Player HP: " + playerHP + " | Score: " + score);
+            Questions q = questionList.get(currentQIndex);// 获取当前题目
 
             // 输出题目
-            System.out.println("\n题目 " + (currentQIndex + 1) + "：" + q.getQuestionText());
+            System.out.println("\nQuestion " + (currentQIndex + 1) + ": " + q.getQuestionText());
             System.out.println(q.getOptionA());
             System.out.println(q.getOptionB());
             System.out.println(q.getOptionC());
             System.out.println(q.getOptionD());
-            System.out.print("请输入你的答案(A/B/C/D)：");
+            System.out.print("Please enter your answer (A/B/C/D): ");
 
             // 获取输入
             String input = scanner.nextLine().trim().toUpperCase();
@@ -82,10 +82,13 @@ public class QuizBattleGUI {
             if (userAnswer == q.getCorrectAnswer()) {
                 bossHP -= 20;
                 score += 10;
-                System.out.println("✅ 回答正确！Boss HP -20 | 分数 +10");
-            } else {
+                System.out.println("✅ Correct! Boss HP -20 | Score +10");
+            } else if(userAnswer != 'A' && userAnswer != 'B' && userAnswer != 'C' && userAnswer != 'D') {
+                System.out.println("⚠️ Invalid input! Please enter A, B, C, or D.");
+                continue; // 重新输入，不增加题目索引
+            }else {
                 playerHP -= 10;
-                System.out.println("❌ 回答错误！玩家 HP -10");
+                System.out.println("❌ Incorrect! Player HP -10");
             }
 
             currentQIndex++;
