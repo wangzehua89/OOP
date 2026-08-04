@@ -38,24 +38,34 @@ public class Questions {
     public String getQuestionText() {
         return questionText;
     }
+
     // 获取A选项
     public String getOptionA() {
         return optionA;
     }
+
     // 获取B选项
     public String getOptionB() {
         return optionB;
     }
+
     // 获取C选项
     public String getOptionC() {
         return optionC;
     }
+
     // 获取D选项
     public String getOptionD() {
         return optionD;
     }
+
     // 获取正确答案
     public char getCorrectAnswer() {
         return correctAnswer;
+    }
+
+    // 校验用户选择是否正确
+    public boolean isCorrect(char userChoice) {
+        return userChoice == correctAnswer;
     }
 }

@@ -1,36 +1,109 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 /**
- * 【控制台版】Code Boss答题对战游戏
- * 规则：
- * Boss初始血量100，玩家初始血量100
- * 答对：Boss血量-20，分数+10
- * 答错：玩家血量-10
- * Boss血量≤0 → 胜利；玩家血量≤0 → GameOver
- * 总共有10道Java选择题
+ * GUI Version - Code Boss Quiz Battle Game
+ * Rules:
+ * Boss starts with 100 HP, Player starts with 100 HP
+ * Correct answer: Boss HP -20, Score +10
+ * Wrong answer: Player HP -10
+ * Boss HP ≤ 0 → Victory; Player HP ≤ 0 → Game Over
+ * Total 10 Java multiple choice questions
  */
-public class QuizBattleGUI {
-    // BOSS血量
+public class QuizBattleGUI extends JFrame implements ActionListener {
+    // BOSS health points
     private int bossHP = 100;
-    // 玩家血量
+    // Player health points
     private int playerHP = 100;
-    // 玩家得分
+    // Player score
     private int score = 0;
-    // 当前题目索引
+    // Current question index
     private int currentQIndex = 0;
-    // 题目集合，存放所有10道题目
+    // Question list, stores all 10 questions
     private ArrayList<Questions> questionList;
-    private Scanner scanner;
+
+    // UI Components
+    private JLabel lblStatus;     // Status display (HP, score, question number)
+    private JLabel lblQuestion;   // Question text
+    private JButton btnA, btnB, btnC, btnD; // Four option buttons
+    private JLabel lblResult;     // Answer result feedback
 
     public QuizBattleGUI() {
-        scanner = new Scanner(System.in);
+        // Basic window settings
+        setTitle("Programming Quiz Battle");
+        setSize(500, 380);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(null);
+        setResizable(false);
+        // Center the window on screen
+        setLocationRelativeTo(null);
+
+        // Initialize UI components
+        initComponents();
+        // Load all questions
         loadQuestions();
-        startGame();
+        // Display the first question
+        updateCurrentQuestion();
+
+        // Show the window
+        setVisible(true);
     }
 
     /**
-     * 加载10道Java相关选择题
+     * Initialize all UI components
+     */
+    private void initComponents() {
+        // Status label
+        lblStatus = new JLabel();
+        lblStatus.setBounds(30, 20, 420, 30);
+        lblStatus.setFont(new Font("Arial", Font.PLAIN, 14));
+
+        // Question label
+        lblQuestion = new JLabel();
+        lblQuestion.setBounds(30, 60, 420, 50);
+        lblQuestion.setFont(new Font("Arial", Font.BOLD, 14));
+        lblQuestion.setVerticalAlignment(SwingConstants.TOP);
+
+        // Option A button
+        btnA = new JButton();
+        btnA.setBounds(50, 130, 180, 40);
+        btnA.addActionListener(this);
+
+        // Option B button
+        btnB = new JButton();
+        btnB.setBounds(260, 130, 180, 40);
+        btnB.addActionListener(this);
+
+        // Option C button
+        btnC = new JButton();
+        btnC.setBounds(50, 190, 180, 40);
+        btnC.addActionListener(this);
+
+        // Option D button
+        btnD = new JButton();
+        btnD.setBounds(260, 190, 180, 40);
+        btnD.addActionListener(this);
+
+        // Result feedback label
+        lblResult = new JLabel("Click an option to start!");
+        lblResult.setBounds(30, 260, 420, 30);
+        lblResult.setFont(new Font("Arial", Font.PLAIN, 14));
+        lblResult.setHorizontalAlignment(SwingConstants.CENTER);
+
+        // Add all components to the window
+        add(lblStatus);
+        add(lblQuestion);
+        add(btnA);
+        add(btnB);
+        add(btnC);
+        add(btnD);
+        add(lblResult);
+    }
+
+    /**
+     * Load 10 Java related multiple choice questions
      */
     private void loadQuestions() {
         questionList = new ArrayList<>();
@@ -57,70 +130,97 @@ public class QuizBattleGUI {
     }
 
     /**
-     * 游戏主循环
+     * Update the UI to display current question
      */
-    private void startGame() {
-        System.out.println("==== Code Boss Quiz Battle Begins ====");
-        while (currentQIndex < questionList.size()) {
-            // 打印状态
-            System.out.println("\nBoss HP: " + bossHP + " | Player HP: " + playerHP + " | Score: " + score);
-            Questions q = questionList.get(currentQIndex);// 获取当前题目
-
-            // 输出题目
-            System.out.println("\nQuestion " + (currentQIndex + 1) + ": " + q.getQuestionText());
-            System.out.println(q.getOptionA());
-            System.out.println(q.getOptionB());
-            System.out.println(q.getOptionC());
-            System.out.println(q.getOptionD());
-            System.out.print("Please enter your answer (A/B/C/D): ");
-
-            // 获取输入
-            String input = scanner.nextLine().trim().toUpperCase();
-            char userAnswer = input.charAt(0);
-
-            // 判断对错
-            if (userAnswer == q.getCorrectAnswer()) {
-                bossHP -= 20;
-                score += 10;
-                System.out.println("✅ Correct! Boss HP -20 | Score +10");
-            } else if(userAnswer != 'A' && userAnswer != 'B' && userAnswer != 'C' && userAnswer != 'D') {
-                System.out.println("⚠️ Invalid input! Please enter A, B, C, or D.");
-                continue; // 重新输入，不增加题目索引
-            }else {
-                playerHP -= 10;
-                System.out.println("❌ Incorrect! Player HP -10");
-            }
-
-            currentQIndex++;
-
-            // 检查游戏结束条件
-            if (checkGameEnd()) {
-                break;
-            }
-        }
-        scanner.close();
+    private void updateCurrentQuestion() {
+        Questions q = questionList.get(currentQIndex);
+        // Update top status bar
+        lblStatus.setText(String.format("Question %d/10 | Boss HP: %d | Your HP: %d | Score: %d",
+                currentQIndex + 1, bossHP, playerHP, score));
+        // Update question text
+        lblQuestion.setText(q.getQuestionText());
+        // Update four option button texts
+        btnA.setText(q.getOptionA());
+        btnB.setText(q.getOptionB());
+        btnC.setText(q.getOptionC());
+        btnD.setText(q.getOptionD());
     }
 
     /**
-     * 检测游戏胜负条件
-     * @return true=游戏结束 false=继续答题
+     * Handle button click events
+     */
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        // Get the clicked button
+        JButton clickBtn = (JButton) e.getSource();
+        char userAnswer = 0;
+
+        // Determine which option the user selected
+        if (clickBtn == btnA) {
+            userAnswer = 'A';
+        } else if (clickBtn == btnB) {
+            userAnswer = 'B';
+        } else if (clickBtn == btnC) {
+            userAnswer = 'C';
+        } else if (clickBtn == btnD) {
+            userAnswer = 'D';
+        }
+
+        Questions currentQ = questionList.get(currentQIndex);
+        // Check if answer is correct
+        if (currentQ.isCorrect(userAnswer)) {
+            bossHP -= 20;
+            score += 10;
+            lblResult.setText("Correct! Boss HP -20 | Score +10");
+            lblResult.setForeground(new Color(0, 120, 0));
+        } else {
+            playerHP -= 10;
+            lblResult.setText("Wrong! Player HP -10");
+            lblResult.setForeground(Color.RED);
+        }
+
+        currentQIndex++;
+
+        // Check if game is over
+        if (checkGameEnd()) {
+            // Game over, disable all buttons
+            btnA.setEnabled(false);
+            btnB.setEnabled(false);
+            btnC.setEnabled(false);
+            btnD.setEnabled(false);
+            return;
+        }
+
+        // Update display to next question
+        updateCurrentQuestion();
+    }
+
+    /**
+     * Check game win/lose conditions
+     * @return true = game over, false = continue
      */
     private boolean checkGameEnd() {
+        String resultMsg = "";
         if (bossHP <= 0) {
-            System.out.println("\n🎉 You won! You successfully defeated Code Boss! Final score: " + score);
+            resultMsg = "Victory! You defeated the Code Boss!\nFinal Score: " + score;
+            JOptionPane.showMessageDialog(this, resultMsg, "Game Over", JOptionPane.INFORMATION_MESSAGE);
             return true;
         } else if (playerHP <= 0) {
-            System.out.println("\n💀 Game over! You lost. Final score: " + score);
+            resultMsg = "Game Over! You have been defeated...\nFinal Score: " + score;
+            JOptionPane.showMessageDialog(this, resultMsg, "Game Over", JOptionPane.ERROR_MESSAGE);
             return true;
         } else if (currentQIndex >= questionList.size()) {
-            System.out.println("\n📝 All questions have been answered！");
-            System.out.println("Boss HP:" + bossHP + " | Player HP:" + playerHP + " | Score:" + score);
+            resultMsg = String.format("All questions completed!\nBoss Remaining HP: %d | Your Remaining HP: %d | Final Score: %d",
+                    bossHP, playerHP, score);
+            JOptionPane.showMessageDialog(this, resultMsg, "Quiz Complete", JOptionPane.PLAIN_MESSAGE);
             return true;
         }
         return false;
     }
 
+    // Main entry point
     public static void main(String[] args) {
+        // Launch GUI window
         new QuizBattleGUI();
-    }
+    }cd
 }
