@@ -222,5 +222,5 @@ public class QuizBattleGUI extends JFrame implements ActionListener {
     public static void main(String[] args) {
         // Launch GUI window
         new QuizBattleGUI();
-    }cd
+    }
 }
